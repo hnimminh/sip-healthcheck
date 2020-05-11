@@ -1,0 +1,7 @@
+*.swp
+env.sh
+*.pyc
+venv/
+*.retry
+.idea
+*.log

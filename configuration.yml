@@ -1,0 +1,59 @@
+application:
+  version: 1.0.2
+  # example
+  domain: siphealthcheck.com
+  name: siphealthcheck
+
+ping:
+  # how often you will do health check sip server? (in second, default: 60)
+  interval: 120
+  # how long you will mark the server is unavailable (in second, default: 10)?
+  timeout: 10
+  # threshold of latency(RTT), how long you mark the server is in high latency (in millisecond, default: 150)?
+  latency: 350
+notification:
+  # sequence of time-point that will alert for timeout/death; when you want to receive alert for timeout?
+  timeout_schedulers: [3, 9, 15, 20]
+  # sequence of time-point that will alert for high latency; when you want to receive alert for latency?
+  latency_schedulers: [5, 10, 20]
+  # which channel will you receive notification?  
+  # support chat notification use Slack
+  # support email notification use Mailgun 
+  # support sms notification use Twilio 
+  # support call notification use Twilio
+  # please note that you will need register apikey to use above service.
+  methods:
+    - name: slack
+      webhook: https://hooks.slack.com/services/your-slack-incoming-webhook
+
+inventory:
+  - name: BorderSer
+    host: 192.168.1.219
+    port: 5070
+    transport: udp
+    ping:
+      interval: 60
+      timeout: 8
+      latency: 600
+    notification:
+      timeout_schedulers: [2, 6, 11, 15]
+      latency_schedulers: [3, 7, 12]
+      methods:
+        - name: slack
+          webhook: https://hooks.slack.com/services/your-slack-incoming-webhook
+        - name: email
+          sender: noreply@siphealthcheck.com
+          receivers: 
+            - minh@siphealthcheck.com
+        - name: sms
+          sender: +84123456789
+          receivers: 
+            - +84987654321
+        - name: call
+          caller: +84123456789
+          callee: +84987654321
+
+  - name: FeatureSer
+    host: 192.168.1.43
+    port: 5060
+    transport: tcp
